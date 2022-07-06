@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "Enter the command in the format destroy-deployment -d 'Instance Name'"
+while getopts "d:" OPTION
+do
+        case $OPTION in
+                d)
+                        kubectl delete deployment $OPTARG
+			kubectl delete svc $OPTARG
+                        rm $HOME/client-login-$OPTARG.txt
+                        exit
+                        ;;
+        esac
+done

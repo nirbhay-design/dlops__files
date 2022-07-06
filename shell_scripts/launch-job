@@ -1,0 +1,49 @@
+#!/bin/bash
+
+username=$(whoami)
+
+echo "Enter Container Image"
+
+read image
+
+echo "Enter Filepath"
+
+read filepath
+
+echo "Enter Mode"
+
+read mode
+
+job=$username
+gpu=1
+
+cat <<EOF >$HOME/${job}-dep.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: $job
+spec:
+  template:
+    spec:
+      containers:
+      - name: $job
+        image: $image
+        command: ["python3"]
+        args: ["${filepath}", "--mode", "${mode}"]
+        resources:
+          limits:
+            nvidia.com/gpu: $gpu
+        volumeMounts:
+        - name: raid
+          mountPath: /workspace
+      volumes:
+      - name: raid
+        hostPath:
+          path: /raid/dlops-course/${username}
+      restartPolicy: Never
+  backoffLimit: 1
+EOF
+cd $HOME
+
+kubectl create -f ${job}-dep.yaml
+rm -rf ${job}-dep.yaml

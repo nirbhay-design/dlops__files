@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Enter the command in the format destroy-job -d 'Instance Name'"
+while getopts "d:" OPTION
+do
+	case $OPTION in 
+		d)
+			kubectl delete job $OPTARG
+			exit
+			;;
+	esac
+done
