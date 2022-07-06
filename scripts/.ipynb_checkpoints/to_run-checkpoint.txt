@@ -1,0 +1,19 @@
+Change directory to src
+
+Then to run single gpu training
+python main.py -C config1 --mode train
+
+Then to run multi gpu training
+python -m torch.distributed.launch --nproc_per_node=4 main.py -C config1 --mode train --distributed
+
+To convert the models into onnx, tensort
+python main.py -C config1 --mode convert
+
+Then to run Pytorch Inferencing
+python main.py -C config1 --mode pytorch
+
+To run Onnx Inferencing
+python main.py -C config1 --mode onnx
+
+To run TensorRT Inferencing
+python main.py -C config1 --mode tensorrt
